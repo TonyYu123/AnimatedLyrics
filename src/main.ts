@@ -1,5 +1,5 @@
 import * as lyrics from "@applemusic-like-lyrics/lyric";
-import '@applemusic-like-lyrics/core/style.css';
+import "@applemusic-like-lyrics/core/style.css";
 import {
   type LyricLine as RawLyricLine,
   parseLrc,
@@ -16,9 +16,12 @@ import {
   MeshGradientRenderer,
   PixiRenderer,
 } from "@applemusic-like-lyrics/core";
-import { DomLyricPlayer, type LyricLineMouseEvent } from "@applemusic-like-lyrics/core";
+import {
+  DomLyricPlayer,
+  type LyricLineMouseEvent,
+} from "@applemusic-like-lyrics/core";
 import type { spring } from "@applemusic-like-lyrics/core";
-type SpringParams = spring.SpringParams
+type SpringParams = spring.SpringParams;
 
 (window as any).lyrics = lyrics;
 
@@ -90,9 +93,9 @@ const debugValues = {
   },
 };
 
-debugValues.lyric = "../assets/lyrics.ttml"
-debugValues.album = "../assets/Cover.jpg"
-debugValues.music = "../assets/春日影 (MyGO!!!!! Ver.).mp3"
+debugValues.lyric = "../assets/lyrics.ttml";
+debugValues.album = "../assets/Cover.jpg";
+debugValues.music = "../assets/春日影 (MyGO!!!!! Ver.).mp3";
 
 function recreateBGRenderer(mode: string) {
   window.globalBackground?.dispose();
@@ -127,7 +130,7 @@ gui
   .name("歌词文件")
   .onFinishChange(async (url: string) => {
     lyricPlayer.setLyricLines(
-      parseTTML(await (await fetch(url)).text()).lines.map(mapTTMLLyric),
+      parseTTML(await (await fetch(url)).text()).lines.map(mapTTMLLyric)
     );
   });
 gui
@@ -277,8 +280,8 @@ declare global {
   interface Window {
     globalLyricPlayer: DomLyricPlayer;
     globalBackground:
-    | BackgroundRender<PixiRenderer>
-    | BackgroundRender<MeshGradientRenderer>;
+      | BackgroundRender<PixiRenderer>
+      | BackgroundRender<MeshGradientRenderer>;
   }
 }
 
@@ -289,7 +292,7 @@ const waitFrame = (): Promise<number> =>
 const mapLyric = (
   line: RawLyricLine,
   _i: number,
-  _lines: RawLyricLine[],
+  _lines: RawLyricLine[]
 ): LyricLine => ({
   words: line.words.map((word) => ({ obscene: false, ...word })),
   startTime: line.words[0]?.startTime ?? 0,
@@ -325,7 +328,7 @@ async function loadLyric() {
     const buildLyricLines = (
       lyric: string,
       startTime = 1000,
-      otherParams: Partial<LyricLine> = {},
+      otherParams: Partial<LyricLine> = {}
     ): LyricLine => {
       let curTime = startTime;
       const words = [];
@@ -355,7 +358,7 @@ async function loadLyric() {
     const DEMO_LYRIC: LyricLine[] = [
       buildLyricLines(
         "Apple ,750|Music ,500|Like ,500|Ly,400|ri,500|cs ,250",
-        1000,
+        1000
       ),
       buildLyricLines("BG ,750|Lyrics ,1000", 2000, {
         isBG: true,
