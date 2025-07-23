@@ -17,6 +17,7 @@
     "@types/stats.js": "^0.17.4",
     "typescript": "^5.8.3",
     "vite": "^7.0.5",
+    "vite-plugin-static-copy": "^3.1.1",
     "vite-plugin-wasm": "^3.5.0"
   },
   "dependencies": {

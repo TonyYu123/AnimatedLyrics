@@ -93,9 +93,9 @@ const debugValues = {
   },
 };
 
-debugValues.lyric = "../assets/lyrics.ttml";
-debugValues.album = "../assets/Cover.jpg";
-debugValues.music = "../assets/春日影 (MyGO!!!!! Ver.).mp3";
+debugValues.lyric = "./assets/lyrics.ttml";
+debugValues.album = "./assets/Cover.jpg";
+debugValues.music = "./assets/春日影 (MyGO!!!!! Ver.).mp3";
 
 function recreateBGRenderer(mode: string) {
   window.globalBackground?.dispose();
@@ -386,7 +386,7 @@ async function loadLyric() {
     lyricPlayer.setEnableSpring(false);
   }
   await loadLyric();
-  debugValues.play();
+  // debugValues.play();
   // debugValues.currentTime = 34;
   // debugValues.mockPlay();
 })();
