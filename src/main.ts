@@ -386,7 +386,80 @@ async function loadLyric() {
     lyricPlayer.setEnableSpring(false);
   }
   await loadLyric();
+
   // debugValues.play();
   // debugValues.currentTime = 34;
   // debugValues.mockPlay();
+
+  document.addEventListener(
+    "click",
+    () => {
+      debugValues.play();
+    },
+    { once: true }
+  );
+
+  gui.domElement.style.display = "none";
+  stats.dom.style.display = "none";
+  document.addEventListener("keydown", (e) => {
+    if (e.shiftKey && e.key.toLowerCase() === "d") {
+      const isHidden = gui.domElement.style.display === "none";
+      gui.domElement.style.display = isHidden ? "block" : "none";
+      stats.dom.style.display = isHidden ? "block" : "none";
+    }
+  });
+
+  let tapCount = 0;
+  let lastTapTime = 0;
+  document.addEventListener("touchend", (e) => {
+    const touch = e.changedTouches[0];
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const x = touch.clientX;
+    const y = touch.clientY;
+    if (x > vw - 200 && y > vh - 200) {
+      const now = Date.now();
+      if (now - lastTapTime < 800) {
+        tapCount++;
+      } else {
+        tapCount = 1;
+      }
+      lastTapTime = now;
+      if (tapCount >= 5) {
+        tapCount = 0;
+        const isHidden = gui.domElement.style.display === "none";
+        gui.domElement.style.display = isHidden ? "block" : "none";
+        stats.dom.style.display = isHidden ? "block" : "none";
+      }
+    } else {
+      tapCount = 0;
+    }
+  });
 })();
+
+const playPrompt = document.createElement("div");
+playPrompt.id = "playPrompt";
+playPrompt.style.position = "fixed";
+playPrompt.style.top = "0";
+playPrompt.style.left = "0";
+playPrompt.style.width = "100%";
+playPrompt.style.height = "100%";
+playPrompt.style.background = "rgba(0,0,0,0.7)";
+playPrompt.style.color = "white";
+playPrompt.style.display = "flex";
+playPrompt.style.justifyContent = "center";
+playPrompt.style.alignItems = "center";
+playPrompt.style.fontSize = "2rem";
+playPrompt.style.cursor = "pointer";
+playPrompt.style.zIndex = "9999";
+playPrompt.textContent = "点击播放";
+document.body.appendChild(playPrompt);
+
+const startPlayback = () => {
+  debugValues.play();
+  playPrompt.style.display = "none";
+
+  document.removeEventListener("click", startPlayback);
+};
+
+document.addEventListener("click", startPlayback);
