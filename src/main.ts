@@ -280,8 +280,8 @@ declare global {
   interface Window {
     globalLyricPlayer: DomLyricPlayer;
     globalBackground:
-      | BackgroundRender<PixiRenderer>
-      | BackgroundRender<MeshGradientRenderer>;
+    | BackgroundRender<PixiRenderer>
+    | BackgroundRender<MeshGradientRenderer>;
   }
 }
 
@@ -437,29 +437,16 @@ async function loadLyric() {
   });
 })();
 
-const playPrompt = document.createElement("div");
-playPrompt.id = "playPrompt";
-playPrompt.style.position = "fixed";
-playPrompt.style.top = "0";
-playPrompt.style.left = "0";
-playPrompt.style.width = "100%";
-playPrompt.style.height = "100%";
-playPrompt.style.background = "rgba(0,0,0,0.7)";
-playPrompt.style.color = "white";
-playPrompt.style.display = "flex";
-playPrompt.style.justifyContent = "center";
-playPrompt.style.alignItems = "center";
-playPrompt.style.fontSize = "2rem";
-playPrompt.style.cursor = "pointer";
-playPrompt.style.zIndex = "9999";
-playPrompt.textContent = "点击播放";
-document.body.appendChild(playPrompt);
+const playPrompt = document.getElementById("playPrompt") as HTMLDivElement | null;
+const playButton = document.getElementById("playButton") as HTMLButtonElement | null;
 
-const startPlayback = () => {
+function startPlayback(): void {
   debugValues.play();
-  playPrompt.style.display = "none";
+  if (playPrompt) {
+    playPrompt.style.display = "none";
+  }
+}
 
-  document.removeEventListener("click", startPlayback);
-};
-
-document.addEventListener("click", startPlayback);
+if (playButton) {
+  playButton.addEventListener("click", startPlayback);
+}
