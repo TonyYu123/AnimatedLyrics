@@ -26,7 +26,7 @@ type SpringParams = spring.SpringParams;
 (window as any).lyrics = lyrics;
 
 const audio = document.createElement("audio");
-audio.volume = 0.5;
+audio.volume = 0.18;
 audio.preload = "auto";
 
 const debugValues = {
