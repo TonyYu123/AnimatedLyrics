@@ -122,6 +122,8 @@ audio.src = debugValues.music;
 audio.load();
 
 const gui = new GUI();
+// Hide debug panel in default
+gui.hide();
 gui.close();
 
 gui.title("AMLL 歌词测试页面");
@@ -255,6 +257,8 @@ lyricPlayer.addEventListener("line-click", (evt) => {
 
 const stats = new Stats();
 stats.showPanel(0);
+// Hide stats panel in default
+stats.dom.style.display = "none";
 document.body.appendChild(stats.dom);
 let lastTime = -1;
 const frame = (time: number) => {
@@ -399,8 +403,6 @@ async function loadLyric() {
     { once: true }
   );
 
-  gui.domElement.style.display = "none";
-  stats.dom.style.display = "none";
   document.addEventListener("keydown", (e) => {
     if (e.shiftKey && e.key.toLowerCase() === "d") {
       const isHidden = gui.domElement.style.display === "none";
@@ -435,6 +437,12 @@ async function loadLyric() {
       tapCount = 0;
     }
   });
+
+
+  const playPrompt = document.getElementById("playPrompt") as HTMLDivElement | null;
+  if (playPrompt) {
+    setTimeout(() => playPrompt.style.display = "flex", 150);
+  }
 })();
 
 const playPrompt = document.getElementById("playPrompt") as HTMLDivElement | null;
