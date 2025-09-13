@@ -1,0 +1,82 @@
+# 工作流名称
+name: Build and Deploy to GitHub Pages
+
+# 触发工作流的事件
+on:
+  # 1. 当代码推送到 haruhikage 分支时触发
+  push:
+    branches:
+      - haruhikage
+  # 2. 允许你从 Actions 标签页手动运行此工作流
+  workflow_dispatch:
+
+# 设置工作流任务所需的权限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 定义一个任务（job）
+jobs:
+  build-and-deploy:
+    # 指定运行环境
+    runs-on: ubuntu-latest
+    
+    # 任务步骤
+    steps:
+      # 第一步：检出（下载）你的代码到运行环境中
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 第二步：设置 Node.js 环境
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # 推荐使用 LTS 版本
+
+      # 第三步：安装 pnpm
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8 # 或者你正在使用的 pnpm 版本
+          run_install: false
+
+      # 第四步：获取 pnpm 存储路径
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      # 第五步：设置缓存以加速后续构建
+      - name: Setup pnpm cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+            
+      # 第六步：安装项目依赖
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 第七步：执行编译
+      # 这里的 'build' 脚本名应该与你 package.json 中的脚本名一致
+      - name: Build project
+        run: pnpm build
+
+      # 第八步：配置 GitHub Pages
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v5
+
+      # 第九步：将编译好的文件（通常在 dist 目录）打包为产物
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Vite 默认的输出目录是 'dist'，如果你的 vite.config.ts 中修改了，请在这里也修改
+          path: './dist'
+
+      # 第十步：部署到 GitHub Pages
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
