@@ -1,5 +1,5 @@
 # 工作流名称
-name: Build and Deploy to GitHub Pages
+name: Build Project on haruhikage Branch
 
 # 触发工作流的事件
 on:
@@ -10,15 +10,9 @@ on:
   # 2. 允许你从 Actions 标签页手动运行此工作流
   workflow_dispatch:
 
-# 设置工作流任务所需的权限
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 # 定义一个任务（job）
 jobs:
-  build-and-deploy:
+  build:
     # 指定运行环境
     runs-on: ubuntu-latest
     
@@ -61,22 +55,15 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       # 第七步：执行编译
-      # 这里的 'build' 脚本名应该与你 package.json 中的脚本名一致
       - name: Build project
         run: pnpm build
 
-      # 第八步：配置 GitHub Pages
-      - name: Setup GitHub Pages
-        uses: actions/configure-pages@v5
-
-      # 第九步：将编译好的文件（通常在 dist 目录）打包为产物
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+      # 第八步：上传编译产物
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
         with:
+          # 产物的名称，下载时会是这个名字的 zip 文件
+          name: dist-files
+          # 需要上传的目录路径
           # Vite 默认的输出目录是 'dist'，如果你的 vite.config.ts 中修改了，请在这里也修改
-          path: './dist'
-
-      # 第十步：部署到 GitHub Pages
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          path: ./dist
